@@ -175,57 +175,76 @@ object list {
 
 
   trait List[+T] {
-    def ::[TT >: T](elem: TT): List[TT] = ???
+    /**
+     * добавляет elem в начало списка и возвращает новый список
+     */
+    def ::[TT >: T](elem: TT): List[TT] = list.::(elem, this)
+
+    /**
+     * делает конкатенацию двух списков
+     */
+    def :::[TT >: T](prefix: List[TT]): List[TT] = prefix match {
+      case Nil => this
+      case ::(h, t) => h :: (t ::: this)
+    }
   }
 
-  case class ::[T](head: T, tail: List[T]) extends List[T]
+  case class ::[+T](head: T, tail: List[T]) extends List[T]
 
   case object Nil extends List[Nothing]
 
   object List {
+
+    /**
+     * Конструктор, позволяющий создать список из N - го числа аргументов
+     */
     def apply[A](v: A*): List[A] = if (v.isEmpty) Nil
-    else new::(v.head, apply(v.tail: _*))
+    else ::(v.head, apply(v.tail: _*))
+
+    /**
+     * Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
+     */
+    def reverse[A](list: List[A]): List[A] = {
+      @tailrec
+      def loop(remaining: List[A], reversed: List[A]): List[A] = {
+        println("  remaining: " + remaining)
+        println("  reversed: " + reversed)
+        remaining match {
+          case Nil => reversed
+          case ::(head, tail) => loop(tail, head :: reversed)
+        }
+      }
+
+      loop(list, Nil)
+    }
+
+    /**
+     * Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
+     */
+    def map[A, B](list: List[A])(f: A => B): List[B] = list match {
+      case Nil => Nil
+      case ::(h, t) => ::(f(h), map(t)(f))
+    }
+
+    /**
+     * Реализовать метод filter для списка который будет фильтровать список по некому условию
+     */
+    def filter[A](list: List[A])(f: A => Boolean): List[A] = list match {
+      case Nil => Nil
+      case ::(h, t) => if (f(h)) ::(h, filter(t)(f)) else filter(t)(f)
+    }
+
+    /**
+     * Написать функцию incList котрая будет принимать список Int и возвращать список,
+     * где каждый элемент будет увеличен на 1
+     */
+    def incList(l: List[Int]): List[Int] = map(l)(_ + 1)
+
+    /**
+     * Написать функцию shoutString котрая будет принимать список String и возвращать список,
+     * где к каждому элементу будет добавлен префикс в виде '!'
+     */
+    def shoutString(l: List[String]): List[String] = map(l)("!" + _)
   }
-
-  val l1: List[Nothing] = List()
-  val l2 = List(1, 2, 3)
-
-
-  /**
-   * Конструктор, позволяющий создать список из N - го числа аргументов
-   * Для этого можно воспользоваться *
-   *
-   * Например вот этот метод принимает некую последовательность аргументов с типом Int и выводит их на печать
-   * def printArgs(args: Int*) = args.foreach(println(_))
-   */
-
-  /**
-   *
-   * Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
-   */
-
-  /**
-   *
-   * Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
-   */
-
-
-  /**
-   *
-   * Реализовать метод filter для списка который будет фильтровать список по некому условию
-   */
-
-  /**
-   *
-   * Написать функцию incList котрая будет принимать список Int и возвращать список,
-   * где каждый элемент будет увеличен на 1
-   */
-
-
-  /**
-   *
-   * Написать функцию shoutString котрая будет принимать список String и возвращать список,
-   * где к каждому элементу будет добавлен префикс в виде '!'
-   */
 
 }
