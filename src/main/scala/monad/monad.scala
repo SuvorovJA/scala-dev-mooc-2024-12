@@ -21,10 +21,7 @@ package object monad {
     }
 
     def withFilter(f: A => Boolean): Wrap[A] = {
-      if (this eq EmptyWrap) EmptyWrap
-      else {
-        if (f(this.get)) this else EmptyWrap
-      }
+      if ((this eq EmptyWrap) || f(get)) this else EmptyWrap
     }
 
   }
