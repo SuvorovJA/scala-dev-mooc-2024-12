@@ -1,7 +1,5 @@
 package ru.otus.module1.futures
 
-import ru.otus.module1.futures.HomeworksUtils.TaskSyntax
-
 import scala.concurrent.{ExecutionContext, Future}
 
 object task_futures_sequence {
@@ -21,6 +19,30 @@ object task_futures_sequence {
    */
   def fullSequence[A](futures: List[Future[A]])
                      (implicit ex: ExecutionContext): Future[(List[A], List[Throwable])] =
-    task"Реализуйте метод `fullSequence`" ()
+    //task"Реализуйте метод `fullSequence`" ()
 
+    //// "full sequence" 15 runnable
+    //// "process list of success and failures" 11 runnable
+    //// "process list of failures" 6 runnable
+    //    Future.traverse(futures) {
+    //        _.map(Right(_)).recover { case throwable => Left(throwable) }
+    //      }
+    //      .map {
+    //        _.partitionMap {
+    //          case Left(t) => Right(t)
+    //          case Right(a) => Left(a)
+    //        }
+    //      }
+
+    //// "full sequence" 12 runnable
+    //// "process list of success and failures" 8 runnable
+    //// "process list of failures" 4 runnable
+    futures.foldRight(Future.successful((List.empty[A], List.empty[Throwable]))) {
+      case (future, acc) =>
+        acc.flatMap {
+          case (successes, failures) =>
+            future.map { result => (result :: successes, failures) }
+              .recover { case throwable => (successes, throwable :: failures) }
+        }
+    }
 }

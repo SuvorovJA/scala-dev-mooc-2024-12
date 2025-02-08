@@ -14,7 +14,7 @@ class futures_sequence_test extends AnyFlatSpec {
     val global: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
     override def execute(runnable: Runnable): Unit = {
-      counter.incrementAndGet()
+      //println( counter.incrementAndGet() )
       if (counter.get() > limit) {
         throw new Exception("Runnable limit reached, You can do better :)")
       } else {
