@@ -1,5 +1,6 @@
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
+import concurrent.duration.DurationInt
 
 object  scala3Contextfunctions {
   // f(f1(f2....)
@@ -17,7 +18,7 @@ object  scala3Contextfunctions {
 
   }
 
-  @main def scala3ContextfunctionsEx()={
+  @main def scala3ContextfunctionsEx(): Int ={
     given ec: ExecutionContext = scala.concurrent.ExecutionContext.global
     Await.result(f1(10), 1 second)
 
