@@ -1,5 +1,7 @@
 package ru.otus.module2
+import cats.Functor
 
+import scala.util.{Failure, Success, Try}
 
 package object catsHomework {
 
@@ -8,8 +10,7 @@ package object catsHomework {
    * @tparam A
    */
   sealed trait Tree[+A]
-  final case class Branch[A](left: Tree[A], right: Tree[A])
-    extends Tree[A]
+  final case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
   final case class Leaf[A](value: A) extends Tree[A]
 
   /**
@@ -17,7 +18,12 @@ package object catsHomework {
    * Проверьте, что код работает корректно для Branch и Leaf
    */
 
-   lazy val treeFunctor = ???
+  lazy val treeFunctor: Functor[Tree] = new Functor[Tree] {
+    def map[A, B](fa: Tree[A])(f: A => B): Tree[B] = fa match {
+      case Branch(left, right) => Branch(map(left)(f), map(right)(f))
+      case Leaf(value) => Leaf(f(value))
+    }
+  }
 
   /**
    * Monad абстракция для последовательной
@@ -55,14 +61,43 @@ package object catsHomework {
    * Напишите instance MonadError для Try
    */
 
-   lazy val tryME = ???
+   lazy val tryME = new MonadError[Try, Throwable] {
+     override def pure[A](v: A): Try[A] = Success(v)
+     override def flatMap[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa.flatMap(f)
+     override def raiseError[A](e: Throwable): Try[A] = Failure(e)
+     override def handleErrorWith[A](fa: Try[A])(f: Throwable => Try[A]): Try[A] = fa.recoverWith { case e => f(e) }
+     override def handleError[A](fa: Try[A])(f: Throwable => A): Try[A] = fa.recover { case e => f(e) }
+     override def ensure[A](fa: Try[A])(e: Throwable)(f: A => Boolean): Try[A] = fa.filter(f)
+   }
 
   /**
    * Напишите instance MonadError для Either,
    * где в качестве типа ошибки будет String
    */
+   type Eit[A] = Either[String, A]
+   val eitherME = new MonadError[Eit, String] {
+     override def pure[A](v: A): Eit[A] = Right(v)
 
-   val eitherME = ???
+     override def flatMap[A, B](fa: Eit[A])(f: A => Eit[B]): Eit[B] = fa match {
+       case Left(e) => Left(e)
+       case Right(a) => f(a)
+     }
 
+     override def raiseError[A](e: String): Eit[A] = Left(e)
 
+     override def handleErrorWith[A](fa: Eit[A])(f: String => Eit[A]): Eit[A] = fa match {
+       case Left(e) => f(e)
+       case Right(a) => Right(a)
+     }
+
+     override def handleError[A](fa: Eit[A])(f: String => A): Eit[A] = fa match {
+       case Left(e) => Right(f(e))
+       case Right(a) => Right(a)
+     }
+
+     override def ensure[A](fa: Eit[A])(e: String)(f: A => Boolean): Eit[A] = fa match {
+       case Left(e) => Left(e)
+       case Right(a) => if (f(a)) Right(a) else Left(e)
+     }
+   }
 }
