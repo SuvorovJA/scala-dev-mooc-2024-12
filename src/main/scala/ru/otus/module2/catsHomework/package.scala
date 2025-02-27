@@ -61,7 +61,7 @@ package object catsHomework {
    * Напишите instance MonadError для Try
    */
 
-   lazy val tryME = new MonadError[Try, Throwable] {
+   lazy val tryME: MonadError[Try, Throwable] = new MonadError[Try, Throwable] {
      override def pure[A](v: A): Try[A] = Success(v)
      override def flatMap[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa.flatMap(f)
      override def raiseError[A](e: Throwable): Try[A] = Failure(e)
@@ -75,7 +75,7 @@ package object catsHomework {
    * где в качестве типа ошибки будет String
    */
    type Eit[A] = Either[String, A]
-   val eitherME = new MonadError[Eit, String] {
+   val eitherME: MonadError[Eit, String] = new MonadError[Eit, String] {
      override def pure[A](v: A): Eit[A] = Right(v)
 
      override def flatMap[A, B](fa: Eit[A])(f: A => Eit[B]): Eit[B] = fa match {
