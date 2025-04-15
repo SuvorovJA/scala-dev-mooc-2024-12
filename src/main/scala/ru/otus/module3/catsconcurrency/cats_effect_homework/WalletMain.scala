@@ -1,4 +1,4 @@
-/*package ru.otus.module3.catsconcurrency.cats_effect_homework
+package ru.otus.module3.catsconcurrency.cats_effect_homework
 
 import cats.effect.{IO, IOApp}
 import cats.implicits._
@@ -15,4 +15,15 @@ object WalletMain extends IOApp.Simple {
     } yield ()
 
 }
-*/
+
+//C:\bin\java\Axiom17\bin\java.exe ...
+//100.0
+//50.0
+//
+//Process finished with exit code 0
+//
+//C:\bin\java\Axiom17\bin\java.exe ...
+//150.0
+//100.0
+//
+//Process finished with exit code 0
