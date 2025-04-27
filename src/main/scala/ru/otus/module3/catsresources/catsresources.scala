@@ -1,3 +1,4 @@
+/*
 // applicative
 import cats.effect.{Async, Concurrent, IOApp, MonadCancel, Spawn, Temporal}
 import cats.effect.unsafe.implicits.global
@@ -144,3 +145,4 @@ val asynctask: IO[Int] = IO.async_ {callback =>
   }).start()
 }
 
+*/

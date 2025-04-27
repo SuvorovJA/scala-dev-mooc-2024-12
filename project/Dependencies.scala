@@ -38,5 +38,12 @@ object Dependencies {
     "org.http4s" %% "http4s-circe" % "0.23.14"
   )
 
+  lazy val ip4s = Seq(
+        "com.comcast" %% "ip4s-core" % "3.3.0"
+      )
 
+  lazy val logger = Seq(
+    "org.typelevel" %% "log4cats-slf4j" % "2.5.0",
+    "ch.qos.logback" % "logback-classic" % "1.4.5"
+  )
 }
