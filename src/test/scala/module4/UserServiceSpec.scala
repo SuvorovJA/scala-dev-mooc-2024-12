@@ -40,7 +40,7 @@ object UserServiceSpec extends ZIOSpecDefault {
         _ <- userService.addUserWithRole(users.head, Manager)
         result <- userService.listUsersDTO()
       } yield assert(result.length)(equalTo(1)) &&
-        assert(result.head.user)(equalTo(users.head)) && assert(result.head.roles)(equalTo(Set(Role(Manager.code, "Manager"))))
+        assert(result.head.user)(equalTo(users.head)) && assert(result.head.roles)(equalTo(Set(Role(Manager.code, Manager.code, "Manager"))))
     ) @@ migrate(),
     test("list user with role Manager should return empty List")(
       for {
@@ -58,7 +58,7 @@ object UserServiceSpec extends ZIOSpecDefault {
         _ <- userService.addUserWithRole(users.head, Manager)
         result <- userService.listUsersWithRole(Manager)
       } yield assert(result.length)(equalTo(1)) && assert(result.head.user)(equalTo(users.head)) &&
-        assert(result.head.roles)(equalTo(Set(Role(Manager.code, "Manager"))))
+        assert(result.head.roles)(equalTo(Set(Role(Manager.code, Manager.code, "Manager"))))
     ) @@ migrate()
   ).provideShared(
     TestContainer.postgres(),
