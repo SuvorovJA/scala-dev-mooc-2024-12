@@ -33,7 +33,7 @@ object UserServiceSpec extends ZIOSpecDefault {
 
   private val Manager = RoleCode("manager")
 
-  def spec = suite("UserServiceSpec")(
+  def spec: Spec[Any, Throwable] = suite("UserServiceSpec")(
     test("add user with role")(
       for {
         userService <- ZIO.service[UserService]

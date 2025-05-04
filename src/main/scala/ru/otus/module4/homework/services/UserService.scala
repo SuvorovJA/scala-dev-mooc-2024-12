@@ -20,7 +20,7 @@ trait UserService {
 }
 
 class Impl(userRepo: UserRepository) extends UserService {
-  val dc = db.Ctx
+  val dc: db.Ctx.type = db.Ctx
 
   def listUsers(): QIO[List[User]] =
     userRepo.list()

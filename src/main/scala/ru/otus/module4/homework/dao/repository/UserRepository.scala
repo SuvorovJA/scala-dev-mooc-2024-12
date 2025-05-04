@@ -33,7 +33,7 @@ trait UserRepository {
 
 
 class UserRepositoryImpl extends UserRepository {
-  val dc = db.Ctx
+  val dc: db.Ctx.type = db.Ctx
 
   import dc._
 
